@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { MessageActionRow, MessageButton, Permissions } = require('discord.js');
 
 module.exports = {
     name: "interactionCreate",
@@ -9,6 +9,7 @@ module.exports = {
             const schema = require('../../models/guild');
             const data = await schema.findOne({ GuildID: interaction.guild.id });
             if(!data) return;
+            if(!interaction.member.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) return interaction.reply({ content: `I'm sorry but you don't have the permissions to use this button!`, ephemeral: true });
             const fieldValues = interaction.message.embeds[0].fields[0].value.split(" ");
             let banned = fieldValues[4];
             banned = banned.replaceAll("(", "");
